@@ -1,5 +1,3 @@
-import { YoutubeTranscript } from 'youtube-transcript';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -30,16 +28,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Fetch transcripts using the new, bot-resistant package
-    const transcript = await YoutubeTranscript.fetchTranscript(videoId);
+    // We bypass the Vercel IP block by using a free public transcript API
+    const response = await fetch(`https://youtube-transcript.ai/transcript/${videoId}.txt`);
+    
+    if (!response.ok) {
+      throw new Error('Transcript not found or video has no captions.');
+    }
+    
+    const rawText = await response.text();
 
-    // Convert to the format our logic expects
-    const subtitles = transcript.map(caption => ({
-      text: caption.text.replace(/<[^>]*>/g, '') 
-    }));
+    // The API returns text grouped in paragraphs with timestamps. 
+    // We split it into lines and strip the timestamps to match our extraction logic.
+    const lines = rawText.split('\n');
+    const subtitles = lines.map(line => ({
+      text: line.replace(/\[\d+:\d+\]/g, '').trim()
+    })).filter(item => item.text.length > 0);
 
-    // Generate dummy title/description since this package only grabs transcripts
-    const dummyTitle = `Video_${videoId}`;
+    const dummyTitle = `YouTube_Video_${videoId}`;
     const dummyDesc = '';
 
     // Process subtitles to extract code and explanations
@@ -55,7 +60,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Extraction error:', error);
-    res.status(500).json({ error: `Failed to fetch transcript. YouTube may have disabled captions for this video or blocked the request.` });
+    res.status(500).json({ error: `Failed to fetch transcript: ${error.message}` });
   }
 }
 
@@ -84,7 +89,7 @@ function guessLanguage(title, description) {
     }
   }
 
-  return 'python'; // Default
+  return 'python'; 
 }
 
 function getLanguageKeywords(language) {
@@ -200,7 +205,6 @@ function formatOutput(videoInfo, blocks, language) {
   output.push(`# Code extracted from: ${title}`);
   output.push(`# Source: https://www.youtube.com/watch?v=${videoId}`);
   output.push(`# Language: ${language}`);
-  output.push(`# Description: ${description.substring(0, 200)}${description.length > 200 ? '...' : ''}`);
   output.push('');
   output.push('# =============================================================================');
   output.push('# EXTRACTED CODE WITH EXPLANATIONS');
