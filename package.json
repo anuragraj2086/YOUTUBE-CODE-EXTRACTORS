@@ -1,0 +1,14 @@
+{
+  "name": "youtube-code-extractor",
+  "version": "1.0.0",
+  "description": "Extract code and explanations from YouTube tutorial videos",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "youtube-caption-extractor": "^1.0.8",
+    "dotenv": "^16.0.3"
+  }
+}
