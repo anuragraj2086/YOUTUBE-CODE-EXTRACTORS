@@ -1,4 +1,4 @@
-import { getVideoDetails } from 'youtube-caption-extractor';
+import { YoutubeTranscript } from 'youtube-transcript';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -30,33 +30,32 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get video info and captions using the correct package function
-    const videoData = await getVideoDetails({ videoID: videoId, lang: 'en' });
+    // Fetch transcripts using the new, bot-resistant package
+    const transcript = await YoutubeTranscript.fetchTranscript(videoId);
 
-    const captions = videoData.subtitles || [];
-    if (captions.length === 0) {
-      console.warn('No captions available for this video');
-    }
-
-    // Convert captions to subtitle format expected by our extraction logic
-    const subtitles = captions.map(caption => ({
+    // Convert to the format our logic expects
+    const subtitles = transcript.map(caption => ({
       text: caption.text.replace(/<[^>]*>/g, '') 
     }));
 
+    // Generate dummy title/description since this package only grabs transcripts
+    const dummyTitle = `Video_${videoId}`;
+    const dummyDesc = '';
+
     // Process subtitles to extract code and explanations
-    const language = guessLanguage(videoData.title || '', videoData.description || '');
+    const language = guessLanguage(dummyTitle, dummyDesc);
     const blocks = extractCodeBlocks(subtitles, language);
-    const formattedCode = formatOutput(videoData, blocks, language);
+    const formattedCode = formatOutput({ title: dummyTitle, id: videoId, description: dummyDesc }, blocks, language);
 
     res.status(200).json({
       code: formattedCode,
       filename: `youtube_code_${videoId}_${language}.txt`,
       language: language,
-      title: videoData.title
+      title: dummyTitle
     });
   } catch (error) {
     console.error('Extraction error:', error);
-    res.status(500).json({ error: `Failed to process video: ${error.message}` });
+    res.status(500).json({ error: `Failed to fetch transcript. YouTube may have disabled captions for this video or blocked the request.` });
   }
 }
 
@@ -85,7 +84,7 @@ function guessLanguage(title, description) {
     }
   }
 
-  return 'python';
+  return 'python'; // Default
 }
 
 function getLanguageKeywords(language) {
