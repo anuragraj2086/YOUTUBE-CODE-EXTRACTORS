@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     // Get video info and captions
     const videoData = await extract(videoId, {
       lang: 'en',
-      format: 'vtt' // We'll parse VTT format
+      format: 'vtt' 
     });
 
     // If no captions available, try auto-generated
@@ -42,19 +42,18 @@ export default async function handler(req, res) {
       try {
         const autoData = await extract(videoId, {
           lang: 'en',
-          kind: 'asr', // Auto-generated captions
+          kind: 'asr', 
           format: 'vtt'
         });
         captions = autoData.captions || [];
       } catch (autoError) {
-        // No captions available
         console.warn('No captions available for this video');
       }
     }
 
     // Convert captions to subtitle format expected by our extraction logic
     const subtitles = captions.map(caption => ({
-      text: caption.text.replace(/<[^>]*>/g, '') // Remove HTML tags
+      text: caption.text.replace(/<[^>]*>/g, '') 
     }));
 
     // Process subtitles to extract code and explanations
@@ -104,51 +103,51 @@ function guessLanguage(title, description) {
 
 function getLanguageKeywords(language) {
   const keywords = {
-    java: {
+    java: [
       'class', 'public', 'private', 'protected', 'static', 'void', 'int', 'String',
       'boolean', 'double', 'float', 'long', 'char', 'if', 'else', 'for', 'while',
       'do', 'switch', 'case', 'break', 'continue', 'return', 'new', 'this', 'super',
       'extends', 'implements', 'interface', 'enum', 'final', 'try', 'catch', 'throw',
       'throws', 'import', 'package', 'assert', 'instanceof', 'native', 'strictfp',
       'transient', 'volatile', 'const', 'goto'
-    },
-    python: {
+    ],
+    python: [
       'def', 'class', 'if', 'else', 'elif', 'for', 'while', 'in', 'is', 'not',
-      'and', 'or', 'return', 'yield', 'from', 'import', 'as', 'with', 'as', 'assert',
+      'and', 'or', 'return', 'yield', 'from', 'import', 'as', 'with', 'assert',
       'break', 'continue', 'pass', 'del', 'raise', 'try', 'except', 'finally',
       'lambda', 'global', 'nonlocal', 'True', 'False', 'None'
-    },
-    javascript: {
+    ],
+    javascript: [
       'var', 'let', 'const', 'function', 'return', 'if', 'else', 'for', 'while',
       'do', 'switch', 'case', 'break', 'continue', 'try', 'catch', 'finally',
       'throw', 'typeof', 'instanceof', 'new', 'this', 'super', 'class', 'extends',
       'import', 'export', 'from', 'as', 'await', 'async', 'static', 'get', 'set',
       'null', 'undefined', 'true', 'false'
-    },
-    cpp: {
+    ],
+    cpp: [
       'int', 'float', 'double', 'char', 'bool', 'void', 'if', 'else', 'for', 'while',
       'do', 'switch', 'case', 'break', 'continue', 'return', 'goto', 'typedef',
       'extern', 'static', 'const', 'volatile', 'signed', 'unsigned', 'short', 'long',
       'class', 'struct', 'union', 'enum', 'public', 'private', 'protected', 'friend',
       'virtual', 'override', 'final', 'delete', 'new', 'try', 'catch', 'throw',
       'namespace', 'using', 'template', 'typename'
-    },
-    c: {
+    ],
+    c: [
       'int', 'float', 'double', 'char', 'bool', 'void', 'if', 'else', 'for', 'while',
       'do', 'switch', 'case', 'break', 'continue', 'return', 'goto', 'typedef',
       'extern', 'static', 'const', 'volatile', 'signed', 'unsigned', 'short', 'long',
-      'struct', 'union', 'enum', 'typedef'
-    }
+      'struct', 'union', 'enum'
+    ]
   };
 
-  return keywords[language] || new Set();
+  return new Set(keywords[language] || []);
 }
 
 function looksLikeCode(line, language, threshold = 2) {
   const keywords = getLanguageKeywords(language);
-  const symbols = {'(', ')', '{', '}', '[', ']', ';', ',', '.', '+', '-', '*', '/', '%',
+  const symbols = ['(', ')', '{', '}', '[', ']', ';', ',', '.', '+', '-', '*', '/', '%',
                    '=', '==', '!=', '<', '>', '<=', '>=', '&&', '||', '!', '&', '|', '^',
-                   '~', '<<', '>>', '++', '--', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^='};
+                   '~', '<<', '>>', '++', '--', '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^='];
 
   const lineLower = line.toLowerCase();
 
@@ -222,25 +221,27 @@ function formatOutput(videoInfo, blocks, language) {
   output.push('# =============================================================================');
   output.push('');
 
+  let indent = '    '; // Default indent properly scoped
+
   // Language-specific header
   if (language === 'java') {
     output.push('public class Main {');
     output.push('    public static void main(String[] args) {');
-    const indent = '        ';
+    indent = '        ';
   } else if (language === 'python') {
     output.push('def main():');
-    const indent = '    ';
+    indent = '    ';
   } else if (language === 'javascript') {
     output.push('function main() {');
-    const indent = '    ';
+    indent = '    ';
   } else if (language === 'cpp' || language === 'c') {
     output.push('#include <iostream>');
     output.push('using namespace std;');
     output.push('int main() {');
-    const indent = '    ';
+    indent = '    ';
   } else {
     output.push('# Main program');
-    const indent = '    ';
+    indent = '    ';
   }
 
   output.push('');
