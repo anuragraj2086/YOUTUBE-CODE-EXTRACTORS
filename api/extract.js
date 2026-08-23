@@ -1,4 +1,4 @@
-import { extract } from 'youtube-caption-extractor';
+import { getVideoDetails } from 'youtube-caption-extractor';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -30,25 +30,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get video info and captions
-    const videoData = await extract(videoId, {
-      lang: 'en',
-      format: 'vtt' 
-    });
+    // Get video info and captions using the correct package function
+    const videoData = await getVideoDetails({ videoID: videoId, lang: 'en' });
 
-    // If no captions available, try auto-generated
-    let captions = videoData.captions || [];
+    const captions = videoData.subtitles || [];
     if (captions.length === 0) {
-      try {
-        const autoData = await extract(videoId, {
-          lang: 'en',
-          kind: 'asr', 
-          format: 'vtt'
-        });
-        captions = autoData.captions || [];
-      } catch (autoError) {
-        console.warn('No captions available for this video');
-      }
+      console.warn('No captions available for this video');
     }
 
     // Convert captions to subtitle format expected by our extraction logic
@@ -221,9 +208,8 @@ function formatOutput(videoInfo, blocks, language) {
   output.push('# =============================================================================');
   output.push('');
 
-  let indent = '    '; // Default indent properly scoped
+  let indent = '    '; 
 
-  // Language-specific header
   if (language === 'java') {
     output.push('public class Main {');
     output.push('    public static void main(String[] args) {');
@@ -246,24 +232,20 @@ function formatOutput(videoInfo, blocks, language) {
 
   output.push('');
 
-  // Process each block
   for (const block of blocks) {
     const { explanations, code } = block;
-    // Add explanations as comments
     for (const explanation of explanations) {
       const clean = explanation.trim();
       if (clean) {
         output.push(`${indent}# ${clean}`);
       }
     }
-    // Add code lines
     for (const codeLine of code) {
       const clean = codeLine.trim();
       if (clean) {
         output.push(`${indent}${clean}`);
       }
     }
-    // Add separator between blocks
     if (explanations.length > 0 && code.length > 0) {
       output.push('');
       output.push(`${indent}# ---`);
@@ -271,7 +253,6 @@ function formatOutput(videoInfo, blocks, language) {
     }
   }
 
-  // Close main function/class
   if (language === 'java') {
     output.push('    }');
     output.push('}');
