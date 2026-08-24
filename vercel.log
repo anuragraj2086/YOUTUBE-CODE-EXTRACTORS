@@ -10,3 +10,55 @@ Searching for existing projects…
 > Connecting GitHub repository: https://github.com/anuragraj2086/YOUTUBE-CODE-EXTRACTORS
 > Connected
 > Ready! Available at http://localhost:3000
+WARNING! There is a syntax error in the `vercel.json` file: Expected double-quoted property name in JSON at position 104 (line 9 column 3) while parsing '{
+  "version": 2,
+  "builds": [
+    {
+  '
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+Error: Watcher error: Error: EPERM: operation not permitted, watch
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
+WARNING! You defined 1 build that did not match any source files (please ensure they are NOT defined in .vercelignore):
+- {"use":"@vercel/node@latest","src":"api/extract.js","config":{"zeroConfig":true}}
